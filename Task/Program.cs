@@ -6,18 +6,27 @@ namespace Task
 {
     public class BankAccount
     {
+        public object padlock = new object();
         public int Balance { get; private set; }
         public void Deposit (int amount)
         {
-            Balance += amount;
+
             // += 
             // opration 1 : temp <- get_Balance() + amount // read 
             // set_Balance(temp) // write 
+            lock (padlock)
+            {
+                Balance += amount;
+            }
+            
         }
 
         public void Withdraw(int amount)
         {
-            Balance -= amount;
+            lock (padlock)
+            {
+                Balance -= amount;
+            }
         }
     }
     class Program
