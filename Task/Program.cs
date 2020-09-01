@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Task
@@ -7,26 +8,23 @@ namespace Task
     public class BankAccount
     {
         public object padlock = new object();
-        public int Balance { get; private set; }
-        public void Deposit (int amount)
+        private int balance;
+
+        public int Balance { get => balance; private set => balance = value; }
+        public void Deposit(int amount)
         {
 
             // += 
             // opration 1 : temp <- get_Balance() + amount // read 
             // set_Balance(temp) // write 
-            lock (padlock)
-            {
-                Balance += amount;
-            }
-            
+
+            Interlocked.Add(ref balance, amount);
+
         }
 
         public void Withdraw(int amount)
         {
-            lock (padlock)
-            {
-                Balance -= amount;
-            }
+            Interlocked.Add( ref balance, -amount);
         }
     }
     class Program
